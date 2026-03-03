@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Builder — AI Literacy Toolkit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:          #1a2744;
+  --navy-2:        #253260;
+  --gsal-gold:     #c9a84c;
+  --gold-dark:     #a07830;
+  --gold-dim:      rgba(201,168,76,0.10);
+  --gold-border:   rgba(201,168,76,0.28);
+  --teal:          #0e7490;
+  --teal-dark:     #0c5f77;
+  --teal-dim:      rgba(14,116,144,0.09);
+  --teal-border:   rgba(14,116,144,0.22);
+  --amber:         #b45309;
+  --amber-dim:     rgba(180,83,9,0.08);
+  --coral:         #b91c1c;
+  --coral-dim:     rgba(185,28,28,0.08);
+  --lime:          #4d7c0f;
+  --lime-dim:      rgba(77,124,15,0.08);
+  --violet:        #6d28d9;
+  --violet-dim:    rgba(109,40,217,0.08);
+  --indigo:        #3730a3;
+  --indigo-dim:    rgba(55,48,163,0.08);
+  --bg:            #f4f6fb;
+  --surface:       #ffffff;
+  --border:        rgba(26,39,68,0.10);
+  --border-mid:    rgba(26,39,68,0.16);
+  --border-strong: rgba(26,39,68,0.22);
+  --text:          #111827;
+  --text-mid:      #374151;
+  --text-dim:      #6b7280;
+  --font-display:  'Playfair Display', Georgia, serif;
+  --font-body:     'DM Sans', system-ui, sans-serif;
+  --font-mono:     'JetBrains Mono', monospace;
+  --radius-sm:     6px;
+  --radius-md:     10px;
+  --radius-lg:     14px;
+  --radius-xl:     20px;
+  --shadow:        0 1px 3px rgba(26,39,68,0.06), 0 4px 16px rgba(26,39,68,0.07);
+  --shadow-lg:     0 4px 24px rgba(26,39,68,0.13);
+
+  /* Mode colours */
+  --tl-accent:     #0e7490;   /* teal for T&L */
+  --tl-dim:        rgba(14,116,144,0.09);
+  --admin-accent:  #6d28d9;   /* violet for Admin */
+  --admin-dim:     rgba(109,40,217,0.09);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAV ── */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  border-bottom: 3px solid var(--gsal-gold);
+  padding: 0 40px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 2px 16px rgba(26,39,68,0.25);
+}
+.nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.nav-logo-mark {
+  width: 38px; height: 38px; background: var(--gsal-gold);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 12px; color: var(--navy);
+}
+.nav-logo-name { font-family: var(--font-display); font-weight: 700; font-size: 14px; color: #fff; line-height: 1.2; }
+.nav-logo-sub  { font-size: 10px; font-weight: 400; color: rgba(201,168,76,0.75); }
+.nav-right { font-size: 11.5px; color: rgba(255,255,255,0.38); font-weight: 300; font-style: italic; }
+
+/* ── PAGE ── */
+.page { max-width: 980px; margin: 0 auto; padding: 52px 36px 100px; }
+
+/* ── PAGE HEADER ── */
+.page-header { margin-bottom: 48px; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--gold-dim); border: 1px solid var(--gold-border);
+  color: var(--gold-dark); font-family: var(--font-mono);
+  font-size: 9.5px; font-weight: 500; padding: 4px 12px; border-radius: 20px;
+  letter-spacing: 1.8px; text-transform: uppercase; margin-bottom: 16px;
+}
+.page-title {
+  font-family: var(--font-display); font-size: clamp(28px,4vw,48px);
+  font-weight: 800; line-height: 1.04; letter-spacing: -0.5px;
+  color: var(--navy); margin-bottom: 14px;
+}
+.page-title .accent { color: var(--gold-dark); }
+.page-subtitle { font-size: 15px; font-weight: 300; color: var(--text-mid); max-width: 560px; line-height: 1.75; }
+
+/* ── SECTION ── */
+.section { margin-bottom: 60px; }
+.section-label {
+  font-family: var(--font-mono); font-size: 9.5px; font-weight: 500;
+  color: var(--gold-dark); letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 8px;
+}
+.section-title {
+  font-family: var(--font-display); font-size: clamp(19px,2.8vw,27px);
+  font-weight: 800; letter-spacing: -0.3px; color: var(--navy); margin-bottom: 10px; line-height: 1.15;
+}
+.section-title .t  { color: var(--teal); }
+.section-title .g  { color: var(--gold-dark); }
+.section-desc { font-size: 14px; color: var(--text-mid); font-weight: 300; line-height: 1.7; max-width: 580px; margin-bottom: 28px; }
+
+/* ════════════════════════════════════════════
+   MODE SWITCH
+════════════════════════════════════════════ */
+.mode-switch {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 14px; margin-bottom: 28px;
+}
+.mode-btn {
+  position: relative;
+  background: var(--surface); border: 2px solid var(--border-mid);
+  border-radius: var(--radius-lg); padding: 20px 22px;
+  cursor: pointer; transition: all 0.22s; text-align: left;
+  font-family: var(--font-body);
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.mode-btn:hover { border-color: var(--border-strong); box-shadow: var(--shadow); }
+.mode-btn.active-tl  { border-color: var(--teal);   background: rgba(14,116,144,0.04); box-shadow: 0 0 0 3px rgba(14,116,144,0.12); }
+.mode-btn.active-adm { border-color: var(--violet); background: rgba(109,40,217,0.04); box-shadow: 0 0 0 3px rgba(109,40,217,0.12); }
+.mode-icon { font-size: 28px; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+.mode-content { flex: 1; }
+.mode-title {
+  font-family: var(--font-display); font-size: 16px; font-weight: 700;
+  color: var(--navy); margin-bottom: 5px;
+}
+.mode-desc { font-size: 12.5px; color: var(--text-mid); font-weight: 300; line-height: 1.6; }
+.mode-tasks { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.mode-tag {
+  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px;
+  border: 1px solid;
+}
+.tag-tl    { background: var(--teal-dim);   color: var(--teal-dark); border-color: var(--teal-border); }
+.tag-admin { background: var(--violet-dim); color: var(--indigo);    border-color: rgba(109,40,217,0.22); }
+.mode-check {
+  position: absolute; top: 14px; right: 14px;
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; color: #fff;
+  opacity: 0; transition: opacity 0.18s;
+}
+.mode-btn.active-tl  .mode-check { background: var(--teal);   opacity: 1; }
+.mode-btn.active-adm .mode-check { background: var(--violet); opacity: 1; }
+
+/* ════════════════════════════════════════════
+   FRAMEWORK GRID
+════════════════════════════════════════════ */
+.framework-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 8px;
+}
+@media (max-width:720px) { .framework-grid { grid-template-columns: 1fr 1fr; } }
+.fw-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 20px 18px 16px;
+  position: relative; overflow: hidden;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+}
+.fw-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--border-mid); }
+.fw-card[data-part="1"] { border-top: 3px solid var(--teal); }
+.fw-card[data-part="2"] { border-top: 3px solid var(--violet); }
+.fw-card[data-part="3"] { border-top: 3px solid var(--lime); }
+.fw-card[data-part="4"] { border-top: 3px solid var(--amber); }
+.fw-card[data-part="5"] { border-top: 3px solid var(--coral); }
+.fw-card[data-part="6"] { border-top: 3px solid var(--gsal-gold); }
+.fw-num { font-family:var(--font-display); font-size:52px; font-weight:800; position:absolute; top:-4px; right:12px; opacity:.05; line-height:1; color:var(--navy); pointer-events:none; }
+.fw-icon { font-size:20px; margin-bottom:8px; display:block; }
+.fw-part-label { font-family:var(--font-mono); font-size:9px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+.fw-card[data-part="1"] .fw-part-label { color:var(--teal); }
+.fw-card[data-part="2"] .fw-part-label { color:var(--violet); }
+.fw-card[data-part="3"] .fw-part-label { color:var(--lime); }
+.fw-card[data-part="4"] .fw-part-label { color:var(--amber); }
+.fw-card[data-part="5"] .fw-part-label { color:var(--coral); }
+.fw-card[data-part="6"] .fw-part-label { color:var(--gold-dark); }
+.fw-title { font-family:var(--font-display); font-size:14px; font-weight:700; color:var(--navy); margin-bottom:7px; }
+.fw-desc  { font-size:12px; color:var(--text-mid); line-height:1.65; font-weight:300; margin-bottom:10px; }
+.fw-example { font-size:11px; color:var(--text-mid); font-style:italic; line-height:1.6; background:var(--bg); border-radius:var(--radius-sm); padding:8px 10px; border:1px solid var(--border); }
+
+/* ════════════════════════════════════════════
+   BUILDER WRAP
+════════════════════════════════════════════ */
+.builder-wrap {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow);
+}
+.builder-bar {
+  padding: 18px 28px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  transition: background 0.3s;
+}
+.builder-bar.bar-tl    { background: var(--teal); }
+.builder-bar.bar-admin { background: var(--indigo); }
+.builder-bar-title { font-family:var(--font-display); font-size:17px; font-weight:700; color:#fff; display:flex; align-items:center; gap:10px; }
+.builder-bar-hint  { font-size:12px; color:rgba(255,255,255,0.5); font-weight:300; }
+
+/* Progress dots */
+.progress-dots {
+  display:flex; align-items:center; gap:6px;
+  padding:10px 28px; background:var(--bg); border-bottom:1px solid var(--border);
+}
+.dot { width:8px; height:8px; border-radius:50%; background:var(--border-mid); transition:background 0.25s,transform 0.2s; }
+.dot.filled { transform:scale(1.15); }
+.dot[data-part="1"].filled { background:var(--teal); }
+.dot[data-part="2"].filled { background:var(--violet); }
+.dot[data-part="3"].filled { background:var(--lime); }
+.dot[data-part="4"].filled { background:var(--amber); }
+.dot[data-part="5"].filled { background:var(--coral); }
+.dot[data-part="6"].filled { background:var(--gold-dark); }
+.dot-label { font-size:11px; color:var(--text-dim); font-weight:300; margin-left:4px; }
+
+/* Builder body */
+.builder-body { padding:26px 28px; }
+
+.field-row { display:grid; gap:16px; margin-bottom:18px; }
+.field-row.cols-3   { grid-template-columns:repeat(3,1fr); }
+.field-row.cols-2   { grid-template-columns:repeat(2,1fr); }
+.field-row.cols-1   { grid-template-columns:1fr; }
+.field-row.cols-2-1 { grid-template-columns:2fr 1fr; }
+.field-row.cols-1-2 { grid-template-columns:1fr 2fr; }
+@media(max-width:700px) {
+  .field-row.cols-3,.field-row.cols-2,.field-row.cols-2-1,.field-row.cols-1-2 { grid-template-columns:1fr; }
+}
+
+.field { display:flex; flex-direction:column; gap:5px; }
+.field-head { display:flex; align-items:center; gap:7px; }
+.field-part {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:17px; height:17px; border-radius:4px;
+  font-size:9px; font-weight:800; flex-shrink:0;
+}
+.part-1 { background:var(--teal-dim);   color:var(--teal);    border:1px solid var(--teal-border); }
+.part-2 { background:var(--violet-dim); color:var(--violet);  border:1px solid rgba(109,40,217,0.22); }
+.part-3 { background:var(--lime-dim);   color:var(--lime);    border:1px solid rgba(77,124,15,0.22); }
+.part-4 { background:var(--amber-dim);  color:var(--amber);   border:1px solid rgba(180,83,9,0.22); }
+.part-5 { background:var(--coral-dim);  color:var(--coral);   border:1px solid rgba(185,28,28,0.22); }
+.part-6 { background:var(--gold-dim);   color:var(--gold-dark); border:1px solid var(--gold-border); }
+
+.field-label { font-size:11px; font-weight:700; color:var(--text-mid); text-transform:uppercase; letter-spacing:0.7px; }
+.field-hint  { font-size:11px; color:var(--text-dim); font-weight:300; line-height:1.45; }
+
+.req-badge { font-size:9px; font-weight:600; color:var(--teal); background:var(--teal-dim); border:1px solid var(--teal-border); padding:2px 6px; border-radius:4px; }
+.opt-badge { font-size:9px; font-weight:600; color:var(--text-dim); background:var(--bg); border:1px solid var(--border); padding:2px 6px; border-radius:4px; }
+
+select, input[type="text"], textarea {
+  width:100%; background:var(--surface); border:1.5px solid var(--border-mid);
+  border-radius:var(--radius-sm); color:var(--text);
+  font-family:var(--font-body); font-size:13px; padding:9px 12px; outline:none;
+  transition:border-color 0.18s,box-shadow 0.18s; appearance:none;
+}
+select {
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center; padding-right:34px;
+}
+select:focus,input[type="text"]:focus,textarea:focus { border-color:var(--navy); box-shadow:0 0 0 3px rgba(26,39,68,0.08); }
+textarea { resize:vertical; min-height:80px; line-height:1.55; }
+
+.builder-divider { height:1px; background:var(--border); margin:22px 0; }
+.builder-section-label {
+  font-family:var(--font-mono); font-size:9px; font-weight:500;
+  color:var(--text-dim); letter-spacing:1.8px; text-transform:uppercase;
+  margin-bottom:14px; display:flex; align-items:center; gap:8px;
+}
+.builder-section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ════════════════════════════════════════════
+   COLLAPSIBLE EXPANDERS (Spec + Personalised)
+════════════════════════════════════════════ */
+.expander {
+  margin-top:12px; border:1.5px solid var(--border-mid);
+  border-radius:var(--radius-lg); overflow:hidden; transition:border-color 0.2s;
+}
+.expander.open-teal   { border-color:var(--teal); }
+.expander.open-violet { border-color:var(--violet); }
+
+.expander-toggle {
+  width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:13px 16px; background:var(--bg); border:none; cursor:pointer;
+  font-family:var(--font-body); transition:background 0.18s; text-align:left;
+}
+.expander-toggle:hover { background:rgba(26,39,68,0.04); }
+.expander.open-teal   .expander-toggle { background:rgba(14,116,144,0.05); }
+.expander.open-violet .expander-toggle { background:rgba(109,40,217,0.05); }
+
+.expander-left { display:flex; align-items:center; gap:10px; }
+.expander-icon { font-size:18px; flex-shrink:0; }
+.expander-active-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; display:none; }
+.has-content-teal   .expander-active-dot { display:block; background:var(--teal); }
+.has-content-violet .expander-active-dot { display:block; background:var(--violet); }
+
+.expander-title { font-size:13px; font-weight:600; color:var(--navy); display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
+.expander-hint  { font-size:11.5px; color:var(--text-dim); font-weight:300; margin-top:2px; line-height:1.4; }
+.has-content-teal   .expander-hint { color:var(--teal); }
+.has-content-violet .expander-hint { color:var(--violet); }
+
+.expander-chevron { font-size:12px; color:var(--text-dim); transition:transform 0.22s; flex-shrink:0; }
+.expander.open-teal   .expander-chevron,
+.expander.open-violet .expander-chevron { transform:rotate(90deg); }
+
+.expander-panel {
+  max-height:0; overflow:hidden;
+  transition:max-height 0.35s ease, padding 0.25s ease;
+  padding:0 16px; background:var(--surface); border-top:0px solid var(--border);
+}
+.expander.open-teal .expander-panel,
+.expander.open-violet .expander-panel {
+  max-height:900px; padding:18px 16px 16px; border-top-width:1px;
+}
+
+/* How-to box */
+.how-to-box {
+  border-radius:var(--radius-md); padding:13px 15px; margin-bottom:12px;
+}
+.how-to-box.gold { background:var(--gold-dim); border:1px solid var(--gold-border); }
+.how-to-box.violet { background:var(--violet-dim); border:1px solid rgba(109,40,217,0.18); }
+.how-to-title { font-size:11.5px; font-weight:700; margin-bottom:7px; }
+.how-to-box.gold   .how-to-title { color:var(--gold-dark); }
+.how-to-box.violet .how-to-title { color:var(--violet); }
+.how-to-steps { font-size:12px; color:var(--text-mid); line-height:1.75; font-weight:300; padding-left:16px; }
+.how-to-steps li { margin-bottom:2px; }
+.how-to-note { font-size:11px; font-style:italic; margin-top:8px; font-weight:400; }
+.how-to-box.gold   .how-to-note { color:var(--gold-dark); }
+.how-to-box.violet .how-to-note { color:var(--violet); }
+
+/* GDPR inline */
+.gdpr-inline {
+  display:flex; gap:8px; align-items:flex-start;
+  font-size:11.5px; color:var(--text-dim); line-height:1.55;
+  margin-bottom:10px; padding:8px 12px;
+  background:#fff8f0; border:1px solid rgba(180,83,9,0.16);
+  border-left:3px solid var(--amber); border-radius:var(--radius-sm);
+}
+.gdpr-inline strong { color:var(--amber); }
+
+/* Expander textarea */
+.expander-textarea {
+  width:100%; min-height:120px; background:var(--bg);
+  border:1.5px solid var(--border-mid); border-radius:var(--radius-md);
+  padding:11px 13px; font-family:var(--font-mono); font-size:11.5px;
+  line-height:1.7; color:var(--text); resize:vertical; outline:none;
+  transition:border-color 0.18s,box-shadow 0.18s; margin-bottom:8px;
+}
+.expander-textarea.teal-focus:focus  { border-color:var(--teal);   box-shadow:0 0 0 3px rgba(14,116,144,0.09); }
+.expander-textarea.violet-focus:focus{ border-color:var(--violet); box-shadow:0 0 0 3px rgba(109,40,217,0.09); }
+.expander-textarea::placeholder { color:var(--text-dim); font-style:italic; font-family:var(--font-body); font-size:12px; }
+
+/* Expander status */
+.expander-status { display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--text-dim); padding:0 2px; }
+.expander-status.active-teal   { color:var(--teal); }
+.expander-status.active-violet { color:var(--violet); }
+.status-dot { width:7px; height:7px; border-radius:50%; background:var(--border-mid); flex-shrink:0; transition:background 0.2s; }
+.active-teal   .status-dot { background:var(--teal); }
+.active-violet .status-dot { background:var(--violet); }
+.status-chars { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); }
+.status-clear { margin-left:auto; background:none; border:none; font-size:11px; color:var(--text-dim); cursor:pointer; font-family:var(--font-body); padding:2px 6px; border-radius:4px; transition:color 0.15s,background 0.15s; }
+.status-clear:hover { color:var(--coral); background:var(--coral-dim); }
+
+/* ════════════════════════════════════════════
+   GDPR WARNING (top of builder)
+════════════════════════════════════════════ */
+.gdpr-banner {
+  display:flex; gap:12px; align-items:flex-start;
+  background:#fff8f0; border:1px solid rgba(180,83,9,0.20);
+  border-left:4px solid var(--amber); border-radius:var(--radius-md);
+  padding:14px 18px; margin-bottom:22px;
+}
+.gdpr-banner p { font-size:12.5px; color:var(--text-mid); line-height:1.65; font-weight:300; }
+.gdpr-banner strong { font-weight:700; color:var(--amber); }
+
+/* ════════════════════════════════════════════
+   OUTPUT AREA
+════════════════════════════════════════════ */
+.output-wrap {
+  margin-top:22px; background:var(--bg);
+  border:1.5px solid var(--border-mid); border-radius:var(--radius-lg);
+  overflow:hidden; min-height:110px;
+}
+.output-placeholder { padding:26px 22px; color:var(--text-dim); font-style:italic; font-size:13px; text-align:center; line-height:1.6; }
+.output-section { display:flex; gap:0; border-bottom:1px solid var(--border); }
+.output-section:last-of-type { border-bottom:none; }
+.output-label {
+  font-family:var(--font-mono); font-size:9px; font-weight:700;
+  letter-spacing:1px; text-transform:uppercase; color:#fff;
+  padding:12px 12px; min-width:110px; flex-shrink:0;
+  display:flex; align-items:flex-start; line-height:1.4;
+}
+.output-section[data-sec="Role"]          .output-label { background:var(--teal); }
+.output-section[data-sec="Context"]       .output-label { background:var(--violet); }
+.output-section[data-sec="Objective"]     .output-label { background:var(--lime); }
+.output-section[data-sec="Spec"]          .output-label { background:var(--teal-dark); }
+.output-section[data-sec="Task"]          .output-label { background:var(--amber); }
+.output-section[data-sec="Personalised"]  .output-label { background:var(--violet); }
+.output-section[data-sec="Constraints"]   .output-label { background:var(--coral); }
+.output-section[data-sec="Format"]        .output-label { background:var(--gold-dark); }
+.output-section[data-sec="Add-on"]        .output-label { background:#374151; }
+.output-section[data-sec="GDPR"]          .output-label { background:#1f2937; }
+.output-body { font-size:12.5px; line-height:1.75; color:var(--text); padding:12px 16px; flex:1; white-space:pre-wrap; }
+
+.output-copy-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 16px; background:var(--gold-dim); border-top:1px solid var(--gold-border);
+  font-size:11.5px; color:var(--gold-dark); font-weight:600;
+}
+.output-char { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); }
+
+/* Download button in output bar */
+.download-btn {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:11.5px; font-weight:700; padding:5px 12px; border-radius:5px;
+  background:var(--navy); color:#fff; border:none; cursor:pointer;
+  font-family:var(--font-body); text-decoration:none;
+  transition:background 0.15s;
+}
+.download-btn:hover { background:var(--navy-2); }
+
+/* ════════════════════════════════════════════
+   ACTION BUTTONS
+════════════════════════════════════════════ */
+.builder-actions { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:20px; }
+.btn {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:10px 20px; border-radius:var(--radius-sm);
+  font-family:var(--font-body); font-size:13px; font-weight:600;
+  cursor:pointer; border:none; transition:all 0.18s; white-space:nowrap;
+}
+.btn-tl    { background:var(--teal);   color:#fff; box-shadow:0 2px 8px rgba(14,116,144,0.25); }
+.btn-tl:hover    { background:var(--teal-dark); transform:translateY(-1px); }
+.btn-admin { background:var(--indigo); color:#fff; box-shadow:0 2px 8px rgba(55,48,163,0.25); }
+.btn-admin:hover { background:#312e81; transform:translateY(-1px); }
+.btn-ghost {
+  background:transparent; color:var(--text-mid);
+  border:1.5px solid var(--border-strong);
+}
+.btn-ghost:hover { background:var(--bg); color:var(--navy); }
+
+/* ════════════════════════════════════════════
+   PRO TIPS
+════════════════════════════════════════════ */
+.tips-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+@media(max-width:720px) { .tips-grid { grid-template-columns:1fr 1fr; } }
+@media(max-width:480px) { .tips-grid { grid-template-columns:1fr; } }
+.tip-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-lg); padding:18px;
+  transition:transform 0.18s,box-shadow 0.18s;
+}
+.tip-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+.tip-icon { font-size:20px; margin-bottom:9px; display:block; }
+.tip-title { font-family:var(--font-display); font-size:14px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+.tip-body  { font-size:12.5px; color:var(--text-mid); line-height:1.68; font-weight:300; }
+.tip-body code { font-family:var(--font-mono); font-size:10.5px; color:var(--teal); background:var(--teal-dim); border:1px solid var(--teal-border); padding:1px 5px; border-radius:3px; }
+
+/* Length input */
+.length-input-wrap {
+  display: flex; gap: 8px; align-items: center;
+}
+.length-num-input {
+  width: 90px; flex-shrink: 0;
+  background: var(--surface); border: 1.5px solid var(--border-mid);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-family: var(--font-body); font-size: 13px; padding: 9px 10px;
+  outline: none; appearance: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.length-num-input:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(26,39,68,0.08); }
+.length-unit-select {
+  flex: 1; padding-right: 30px;
+}
+
+/* Engagement explainer */
+.engagement-explainer {
+  font-size: 12.5px; color: var(--text-mid); font-weight: 300;
+  line-height: 1.65; margin-bottom: 14px;
+  padding: 10px 14px;
+  background: var(--violet-dim);
+  border: 1px solid rgba(109,40,217,0.18);
+  border-left: 3px solid var(--violet);
+  border-radius: var(--radius-sm);
+}
+
+/* ════════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════════ */
+.gsal-footer {
+  background:var(--navy); padding:20px 40px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; flex-wrap:wrap; margin-top:48px;
+}
+.gsal-footer-left { display:flex; align-items:center; gap:12px; }
+.gsal-footer-badge { background:var(--gsal-gold); color:var(--navy); font-size:10.5px; font-weight:700; padding:4px 10px; border-radius:5px; }
+.gsal-footer-text { font-size:11.5px; color:rgba(255,255,255,0.38); font-weight:300; }
+
+/* ════════════════════════════════════════════
+   ANIMATIONS + RESPONSIVE
+════════════════════════════════════════════ */
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.animate { animation:fadeUp 0.42s ease both; }
+.d1{animation-delay:0.06s} .d2{animation-delay:0.12s} .d3{animation-delay:0.18s}
+
+@media(max-width:640px) {
+  .topnav{padding:0 18px}
+  .page{padding:32px 18px 72px}
+  .builder-body{padding:18px}
+  .builder-bar{padding:14px 18px}
+  .progress-dots{padding:10px 18px}
+  .mode-switch{grid-template-columns:1fr}
+  .gsal-footer{padding:18px;flex-direction:column;align-items:flex-start}
+}
+
+/* Hide/show mode-specific fields */
+.tl-only, .admin-only { display:none; }
+body.mode-tl    .tl-only    { display:block; }
+body.mode-admin .admin-only { display:block; }
+body.mode-tl    .tl-row    { display:grid; }
+body.mode-admin .admin-row { display:grid; }
+</style>
+</head>
+<body class="mode-tl">
+
+<nav class="topnav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">AI</div>
+    <div style="display:flex;flex-direction:column;gap:1px">
+      <div class="nav-logo-name">AI Literacy Toolkit</div>
+      <div class="nav-logo-sub">Staff Resource · Internal Use Only</div>
+    </div>
+  </a>
+  <div class="nav-right">Staff resource · Internal use only</div>
+</nav>
+
+<div class="page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header animate">
+    <div class="eyebrow">✍️ Prompt Engineering</div>
+    <h1 class="page-title">Prompt <span class="accent">Builder</span></h1>
+    <p class="page-subtitle">A structured tool for writing better AI prompts. Select your mode, fill in the fields, and copy a ready-to-use prompt into Claude, ChatGPT, or Microsoft Copilot.</p>
+  </div>
+
+  <!-- ══ SECTION 1 — FRAMEWORK ══ -->
+  <div class="section animate d1">
+    <div class="section-label">Section 1 — The Framework</div>
+    <h2 class="section-title">The <span class="t">6-Part Prompt</span></h2>
+    <p class="section-desc">Every part matters. The more context you give, the better the output. These six parts apply to both teaching resources and professional tasks.</p>
+    <div class="framework-grid">
+      <div class="fw-card" data-part="1">
+        <div class="fw-num">1</div><span class="fw-icon">🎭</span>
+        <div class="fw-part-label">Part 1 · Role</div>
+        <div class="fw-title">Who is the AI?</div>
+        <div class="fw-desc">Set the AI's persona and expertise — primes vocabulary, depth, and pedagogical framing.</div>
+        <div class="fw-example">"You are an expert A-Level Economics teacher with 15 years of UK classroom experience..."</div>
+      </div>
+      <div class="fw-card" data-part="2">
+        <div class="fw-num">2</div><span class="fw-icon">👥</span>
+        <div class="fw-part-label">Part 2 · Audience</div>
+        <div class="fw-title">Who are they for?</div>
+        <div class="fw-desc">Year group, ability, prior knowledge — or for admin tasks, the intended reader of the document.</div>
+        <div class="fw-example">"My pupils are Year 10, mixed ability. They understand supply and demand but not yet PED."</div>
+      </div>
+      <div class="fw-card" data-part="3">
+        <div class="fw-num">3</div><span class="fw-icon">🎯</span>
+        <div class="fw-part-label">Part 3 · Objective</div>
+        <div class="fw-title">What's the goal?</div>
+        <div class="fw-desc">The specific outcome — learning goal, document purpose, or what the reader must be able to do.</div>
+        <div class="fw-example">"Pupils must calculate PED, interpret the coefficient, and predict the effect on total revenue."</div>
+      </div>
+      <div class="fw-card" data-part="4">
+        <div class="fw-num">4</div><span class="fw-icon">⚡</span>
+        <div class="fw-part-label">Part 4 · Task</div>
+        <div class="fw-title">What to produce?</div>
+        <div class="fw-desc">Name the exact output — worksheet, mark scheme, report comment, parent letter, agenda.</div>
+        <div class="fw-example">"Create a differentiated worksheet: retrieval starter, two-level main task, extension challenge."</div>
+      </div>
+      <div class="fw-card" data-part="5">
+        <div class="fw-num">5</div><span class="fw-icon">🔒</span>
+        <div class="fw-part-label">Part 5 · Constraints</div>
+        <div class="fw-title">What are the limits?</div>
+        <div class="fw-desc">Length, reading age, UK English, tone, excluded content. Negative constraints are the most powerful.</div>
+        <div class="fw-example">"Max 2 sides of A4. UK examples only. Reading age 14. No colour printing assumed."</div>
+      </div>
+      <div class="fw-card" data-part="6">
+        <div class="fw-num">6</div><span class="fw-icon">📄</span>
+        <div class="fw-part-label">Part 6 · Format</div>
+        <div class="fw-title">How should it look?</div>
+        <div class="fw-desc">Plain text, table, two-column, or a downloadable interactive file. Be specific about structure.</div>
+        <div class="fw-example">"Plain text for Word. Pupil version first, teacher key clearly separated. Flag [CHECK THIS] where uncertain."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SECTION 2 — BUILDER ══ -->
+  <div class="section animate d2" id="builder">
+    <div class="section-label">Section 2 — Interactive Tool</div>
+    <h2 class="section-title"><span class="g">Prompt Builder</span></h2>
+    <p class="section-desc">Choose your mode first — the fields update to match your task.</p>
+
+    <!-- MODE SWITCH -->
+    <div class="mode-switch">
+      <button class="mode-btn active-tl" id="btn-tl" onclick="setMode('tl')" type="button">
+        <div class="mode-check">✓</div>
+        <div class="mode-icon">📚</div>
+        <div class="mode-content">
+          <div class="mode-title">Teaching &amp; Learning</div>
+          <div class="mode-desc">Create classroom resources, assessments, and interactive materials for your pupils.</div>
+          <div class="mode-tasks">
+            <span class="mode-tag tag-tl">Worksheets</span>
+            <span class="mode-tag tag-tl">Quizzes</span>
+            <span class="mode-tag tag-tl">Lesson Plans</span>
+            <span class="mode-tag tag-tl">Mark Schemes</span>
+            <span class="mode-tag tag-tl">Knowledge Organisers</span>
+          </div>
+        </div>
+      </button>
+      <button class="mode-btn" id="btn-admin" onclick="setMode('admin')" type="button">
+        <div class="mode-check">✓</div>
+        <div class="mode-icon">📋</div>
+        <div class="mode-content">
+          <div class="mode-title">Professional &amp; Admin</div>
+          <div class="mode-desc">Draft reports, parent communications, cover lessons, agendas, and policy documents.</div>
+          <div class="mode-tasks">
+            <span class="mode-tag tag-admin">Report Comments</span>
+            <span class="mode-tag tag-admin">Parent Letters</span>
+            <span class="mode-tag tag-admin">Cover Lessons</span>
+            <span class="mode-tag tag-admin">Policy Drafts</span>
+            <span class="mode-tag tag-admin">Meeting Agendas</span>
+          </div>
+        </div>
+      </button>
+    </div>
+
+    <div class="builder-wrap">
+
+      <!-- Bar -->
+      <div class="builder-bar bar-tl" id="builder-bar">
+        <div class="builder-bar-title" id="builder-bar-title">📚 Teaching &amp; Learning Builder</div>
+        <div class="builder-bar-hint">Required fields marked ●</div>
+      </div>
+
+      <!-- Progress dots -->
+      <div class="progress-dots">
+        <div class="dot" data-part="1"></div>
+        <div class="dot" data-part="2"></div>
+        <div class="dot" data-part="3"></div>
+        <div class="dot" data-part="4"></div>
+        <div class="dot" data-part="5"></div>
+        <div class="dot" data-part="6"></div>
+        <span class="dot-label" id="dot-label">Choose a mode above, then fill in the fields</span>
+      </div>
+
+      <div class="builder-body">
+
+        <!-- GDPR banner -->
+        <div class="gdpr-banner">
+          <span style="font-size:20px;flex-shrink:0">⚠️</span>
+          <p><strong>Before you start:</strong> Do not enter real pupil names, identifiable information, SEND details, safeguarding content, or HR-sensitive data into this tool or into any AI platform. Use <strong>[Pupil]</strong> as a placeholder where needed. This tool assembles prompts locally — nothing is stored or transmitted.</p>
+        </div>
+
+        <!-- ── SHARED REQUIRED FIELDS ── -->
+        <div class="builder-section-label">Core fields</div>
+        <div class="field-row cols-3" id="row-role-task">
+          <div class="field">
+            <div class="field-head">
+              <div class="field-part part-1">1</div>
+              <div class="field-label">Subject / Role</div>
+              <span class="req-badge">Required</span>
+            </div>
+            <div class="field-hint">Sets the AI's expertise</div>
+            <select id="b-role" onchange="onFieldChange()">
+              <option value="">Choose subject…</option>
+              <optgroup label="Primary">
+                <option value="expert KS1 primary school teacher">KS1 Primary (Years 1–2)</option>
+                <option value="expert KS2 primary school teacher">KS2 Primary (Years 3–6)</option>
+                <option value="expert primary English teacher">Primary English</option>
+                <option value="expert primary Maths teacher">Primary Maths</option>
+                <option value="expert primary Science teacher">Primary Science</option>
+              </optgroup>
+              <optgroup label="Social Sciences">
+                <option value="expert A-Level Economics teacher">A-Level Economics</option>
+                <option value="expert GCSE Economics teacher">GCSE Economics</option>
+                <option value="expert A-Level Business Studies teacher">A-Level Business</option>
+                <option value="expert GCSE Business Studies teacher">GCSE Business</option>
+                <option value="expert A-Level Politics teacher">A-Level Politics</option>
+                <option value="expert A-Level Psychology teacher">A-Level Psychology</option>
+                <option value="expert A-Level Sociology teacher">A-Level Sociology</option>
+              </optgroup>
+              <optgroup label="Humanities">
+                <option value="expert A-Level History teacher">A-Level History</option>
+                <option value="expert GCSE History teacher">GCSE History</option>
+                <option value="expert A-Level Geography teacher">A-Level Geography</option>
+                <option value="expert GCSE Geography teacher">GCSE Geography</option>
+                <option value="expert A-Level Religious Studies teacher">A-Level Religious Studies</option>
+                <option value="expert KS3 Humanities teacher">KS3 Humanities</option>
+              </optgroup>
+              <optgroup label="English &amp; Arts">
+                <option value="expert GCSE English Language and Literature teacher">GCSE English</option>
+                <option value="expert A-Level English Literature teacher">A-Level English Literature</option>
+                <option value="expert KS3 English teacher">KS3 English</option>
+                <option value="expert A-Level Media Studies teacher">A-Level Media Studies</option>
+                <option value="expert A-Level Drama and Theatre Studies teacher">A-Level Drama</option>
+              </optgroup>
+              <optgroup label="STEM">
+                <option value="expert GCSE and A-Level Mathematics teacher">Mathematics</option>
+                <option value="expert GCSE Combined Science teacher">GCSE Science (Combined)</option>
+                <option value="expert A-Level Biology teacher">A-Level Biology</option>
+                <option value="expert A-Level Chemistry teacher">A-Level Chemistry</option>
+                <option value="expert A-Level Physics teacher">A-Level Physics</option>
+                <option value="expert GCSE Computer Science teacher">GCSE Computer Science</option>
+                <option value="expert A-Level Computer Science teacher">A-Level Computer Science</option>
+              </optgroup>
+              <optgroup label="Languages">
+                <option value="expert GCSE and A-Level French teacher">French</option>
+                <option value="expert GCSE and A-Level Spanish teacher">Spanish</option>
+                <option value="expert GCSE and A-Level German teacher">German</option>
+              </optgroup>
+              <optgroup label="Whole School">
+                <option value="expert PSHE and RSE teacher">PSHE / RSE</option>
+                <option value="experienced SENCO and SEND specialist teacher">SEND / SENCO</option>
+                <option value="experienced school leader and CPD facilitator">School Leader / CPD</option>
+                <option value="experienced Head of Year and pastoral leader in a secondary school">Head of Year / Pastoral Leader</option>
+                <option value="experienced Deputy Head of Year responsible for pupil behaviour, welfare, and parent communication in a secondary school">Deputy Head of Year</option>
+                <option value="experienced form tutor responsible for the pastoral welfare and academic progress of a tutor group">Form Tutor</option>
+                <option value="experienced school trip leader responsible for organising and communicating educational visits">Trip Leader / Educational Visits</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- TL: Task Type -->
+          <div class="field tl-only" id="field-tl-task">
+            <div class="field-head">
+              <div class="field-part part-4">4</div>
+              <div class="field-label">Task Type</div>
+              <span class="req-badge">Required</span>
+            </div>
+            <div class="field-hint">The specific output needed</div>
+            <select id="b-tl-task" onchange="onFieldChange()">
+              <option value="">Choose task…</option>
+              <optgroup label="Classroom Resources">
+                <option value="Create a differentiated worksheet with starter, main task, and extension">Differentiated Worksheet</option>
+                <option value="Create a 10-question retrieval practice quiz with answers">Retrieval Quiz</option>
+                <option value="Create a knowledge organiser — one side of A4">Knowledge Organiser</option>
+                <option value="Create a complete 60-minute lesson plan">Full Lesson Plan</option>
+                <option value="Create a cover lesson that a non-specialist can deliver independently">Cover Lesson</option>
+                <option value="Create a structured essay scaffold / writing frame">Essay Scaffold</option>
+                <option value="Create a reading comprehension passage with questions and answers">Reading Comprehension</option>
+                <option value="Create pupil-facing task instructions for an independent project">Independent Study Brief</option>
+              </optgroup>
+              <optgroup label="Assessment">
+                <option value="Create exam-style questions with mark schemes">Exam Questions + Mark Schemes</option>
+                <option value="Create a model answer at the top mark band with annotations">Model Answer (Annotated)</option>
+                <option value="Create a self-assessment checklist using 'I can…' statements">Self-Assessment Checklist</option>
+                <option value="Create a DIRT / purple pen task for pupils to act on feedback">DIRT / Purple Pen Task</option>
+                <option value="Create a pre-exam revision checklist covering all key topics">Revision Checklist</option>
+                <option value="Create discussion or Socratic questioning prompts for classroom debate">Discussion / Debate Questions</option>
+                <option value="Generate feedback comments for a class set of responses">Feedback Comment Bank</option>
+              </optgroup>
+              <optgroup label="Interactive / EdTech">
+                <option value="Build a self-contained single-file HTML interactive quiz — 10 questions, immediate feedback, score, revision tip. No external libraries.">HTML Quiz (downloadable)</option>
+                <option value="Build a self-contained single-file HTML flashcard revision app with flip animation, self-rating, and progress counter. No external libraries.">HTML Flashcard App (downloadable)</option>
+                <option value="Build a self-contained single-file HTML drag-and-drop sorting or categorisation activity. No external libraries.">HTML Drag-and-Drop Activity (downloadable)</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- Admin: Task Type -->
+          <div class="field admin-only" id="field-admin-task">
+            <div class="field-head">
+              <div class="field-part part-4">4</div>
+              <div class="field-label">Task Type</div>
+              <span class="req-badge">Required</span>
+            </div>
+            <div class="field-hint">The document or output needed</div>
+            <select id="b-admin-task" onchange="onAdminTaskChange()">
+              <option value="">Choose task…</option>
+              <optgroup label="Pupil Reports">
+                <option value="Generate a bank of GDPR-safe academic report comments using [Pupil] as placeholder. Range of performance profiles.">Academic Report Comments</option>
+                <option value="Generate a bank of GDPR-safe pastoral / form tutor report comments using [Pupil] as placeholder.">Pastoral / Form Tutor Comments</option>
+                <option value="Generate a bank of GDPR-safe predicted grade / effort grade comments using [Pupil] as placeholder.">Predicted Grade Comments</option>
+              </optgroup>
+              <optgroup label="Pastoral &amp; Behaviour">
+                <option value="Draft a formal behaviour letter home to parents regarding a pupil concern, using [Pupil] as placeholder. Professional, factual, and non-inflammatory.">Behaviour Letter Home</option>
+                <option value="Draft a letter home to parents regarding a pastoral concern — attendance, welfare, or wellbeing — using [Pupil] as placeholder. Sensitive and supportive in tone.">Pastoral Concern Letter Home</option>
+                <option value="Draft a positive recognition letter home to parents celebrating a pupil's achievement or attitude, using [Pupil] as placeholder. Warm and specific.">Positive Recognition Letter Home</option>
+                <option value="Draft a letter inviting parents to a meeting to discuss their child's progress or a concern, using [Pupil] as placeholder. Professional and clear about the purpose.">Invitation to Parents' Meeting</option>
+              </optgroup>
+              <optgroup label="Educational Trips">
+                <option value="Draft an initial trip information letter to parents: trip name, destination, educational purpose, dates, costs, kit list placeholders, and permission slip reminder. Informative and engaging.">Trip Information Letter</option>
+                <option value="Draft a pre-departure update to parents with final logistics, departure time, return time, emergency contact number placeholder, and what pupils should bring.">Pre-Departure Update</option>
+                <option value="Draft a brief trip update communication to parents during or immediately after the trip — what the group has been doing, highlights, and return details.">During / Post-Trip Update</option>
+              </optgroup>
+                <option value="Draft a warm, informative letter home to parents about a school event or update">Parent Letter (event / update)</option>
+                <option value="Draft a sensitive letter home to parents regarding a pupil concern, using [Pupil] as placeholder">Parent Letter (concern)</option>
+                <option value="Draft a school newsletter contribution or section">Newsletter Contribution</option>
+              </optgroup>
+              <optgroup label="Professional">
+                <option value="Create a 50-minute CPD session plan">CPD Session Plan</option>
+                <option value="Create a scheme of work overview as a planning grid">Scheme of Work Overview</option>
+                <option value="Draft a professional policy document">Policy Document</option>
+                <option value="Create a structured meeting agenda">Meeting Agenda</option>
+                <option value="Draft a structured set of interview questions for a teaching post (with notes on what strong answers look like)">Interview Questions (teaching post)</option>
+                <option value="Summarise meeting notes into a clear set of agreed actions and next steps">Meeting Summary / Action Points</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- TL Year group -->
+          <div class="field tl-only" id="field-tl-year">
+            <div class="field-head">
+              <div class="field-part part-2">2</div>
+              <div class="field-label">Year Group</div>
+              <span class="req-badge">Required</span>
+            </div>
+            <div class="field-hint">Shapes difficulty and scaffolding</div>
+            <select id="b-tl-audience" onchange="onFieldChange()">
+              <option value="">Select year group…</option>
+              <optgroup label="Primary">
+                <option value="Year 1 pupils (ages 5–6), KS1">Year 1 (KS1)</option>
+                <option value="Year 2 pupils (ages 6–7), KS1">Year 2 (KS1)</option>
+                <option value="Year 3 pupils (ages 7–8), KS2">Year 3 (KS2)</option>
+                <option value="Year 4 pupils (ages 8–9), KS2">Year 4 (KS2)</option>
+                <option value="Year 5 pupils (ages 9–10), KS2">Year 5 (KS2)</option>
+                <option value="Year 6 pupils (ages 10–11), KS2">Year 6 (KS2)</option>
+              </optgroup>
+              <optgroup label="KS3">
+                <option value="Year 7 pupils (ages 11–12), KS3">Year 7 (KS3)</option>
+                <option value="Year 8 pupils (ages 12–13), KS3">Year 8 (KS3)</option>
+                <option value="Year 9 pupils (ages 13–14), KS3">Year 9 (KS3)</option>
+              </optgroup>
+              <optgroup label="GCSE">
+                <option value="Year 10 GCSE pupils, mixed ability">Year 10 (GCSE)</option>
+                <option value="Year 10 GCSE pupils, higher ability set">Year 10 (GCSE Higher)</option>
+                <option value="Year 11 GCSE pupils, exam year">Year 11 (GCSE Exam Year)</option>
+              </optgroup>
+              <optgroup label="Sixth Form">
+                <option value="Year 12 A-Level pupils (first year of sixth form)">Year 12 (A-Level Yr 1)</option>
+                <option value="Year 13 A-Level pupils (final year, approaching exams)">Year 13 (A-Level Yr 2)</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <!-- TL: Topic + Ability + Board row -->
+        <div class="field-row cols-3 tl-only" id="row-tl-topic">
+          <div class="field" style="grid-column:span 2">
+            <div class="field-head"><div class="field-label">Topic</div><span class="req-badge">Required</span></div>
+            <div class="field-hint">Be specific — "Price Elasticity of Demand" not just "Economics"</div>
+            <input type="text" id="b-topic" placeholder="e.g. Causes of WW1 · Price Elasticity of Demand · Attachment Theory · Photosynthesis" oninput="onFieldChange()">
+          </div>
+          <div class="field">
+            <div class="field-head"><div class="field-label">Ability Level</div><span class="opt-badge">Optional</span></div>
+            <div class="field-hint">Calibrates scaffolding</div>
+            <select id="b-ability" onchange="onFieldChange()">
+              <option value="">Not specified</option>
+              <option value="mixed ability class">Mixed ability</option>
+              <option value="higher ability set">Higher ability</option>
+              <option value="foundation / lower ability group">Foundation / Lower ability</option>
+              <option value="SEN-inclusive class, some pupils with reading ages below chronological age">SEN-inclusive</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- TL: Exam board -->
+        <div class="field-row cols-2-1 tl-only" id="row-tl-board">
+          <div class="field">
+            <div class="field-head">
+              <div class="field-part part-3">3</div>
+              <div class="field-label">Learning Objective</div><span class="opt-badge">Optional but powerful</span>
+            </div>
+            <div class="field-hint">What must pupils know or be able to do? The more precise, the better.</div>
+            <textarea id="b-objective" placeholder="e.g. Pupils must calculate PED, interpret the coefficient, and predict the effect on total revenue. They have covered supply and demand but not elasticity." oninput="onFieldChange()"></textarea>
+          </div>
+          <div class="field">
+            <div class="field-head"><div class="field-label">Exam Board</div><span class="opt-badge">Optional</span></div>
+            <div class="field-hint">Aligns assessment language</div>
+            <select id="b-board" onchange="onFieldChange()">
+              <option value="">Not specified</option>
+              <option value="AQA">AQA</option>
+              <option value="Edexcel / Pearson">Edexcel / Pearson</option>
+              <option value="OCR">OCR</option>
+              <option value="WJEC / Eduqas">WJEC / Eduqas</option>
+              <option value="Cambridge International">Cambridge International</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- TL: Spec expander -->
+        <div class="tl-only" id="row-tl-spec">
+          <div class="expander" id="spec-expander">
+            <button class="expander-toggle" onclick="toggleExpander('spec')" type="button">
+              <div class="expander-left">
+                <div class="expander-icon">📄</div>
+                <div class="expander-active-dot"></div>
+                <div>
+                  <div class="expander-title">Add specification content <span class="opt-badge">Optional</span></div>
+                  <div class="expander-hint" id="spec-hint">Open your spec PDF → find your topic section → copy and paste it here</div>
+                </div>
+              </div>
+              <div class="expander-chevron">▸</div>
+            </button>
+            <div class="expander-panel" id="spec-panel">
+              <div class="how-to-box gold">
+                <div class="how-to-title">💡 How to do this</div>
+                <ol class="how-to-steps">
+                  <li>Open your exam board spec PDF (AQA, Edexcel, OCR etc.)</li>
+                  <li>Find the section for your specific topic</li>
+                  <li>Select and copy the content statements, assessment objectives, and command words</li>
+                  <li>Paste below — the AI will extract what's relevant to your task automatically</li>
+                </ol>
+                <div class="how-to-note">A topic's worth of spec text (1–2 pages) is ideal. You don't need the whole document.</div>
+              </div>
+              <div class="gdpr-inline"><span>⚠️</span><span><strong>GDPR:</strong> Only paste publicly available specification content. Never paste pupil data, results, or anything identifiable.</span></div>
+              <textarea class="expander-textarea teal-focus" id="spec-paste"
+                placeholder="e.g. AQA A-Level Economics — 3.1.3 Price Elasticity of Demand&#10;&#10;Students should be able to:&#10;• define PED and use the formula: PED = % change in Qd ÷ % change in P&#10;• interpret PED values: elastic (>1), inelastic (<1), unitary (=1)&#10;• explain the factors that influence PED: substitutes, necessity vs luxury, time period&#10;• analyse the relationship between PED and total revenue&#10;• evaluate the significance of PED for pricing decisions and indirect taxation&#10;&#10;Command words: calculate, interpret, analyse, evaluate, assess"
+                oninput="onExpanderChange('spec')"></textarea>
+              <div class="expander-status" id="spec-status">
+                <div class="status-dot"></div>
+                <span id="spec-status-text">No spec content added yet</span>
+                <span class="status-chars" id="spec-chars"></span>
+                <button class="status-clear" id="spec-clear" onclick="clearExpander('spec')" style="display:none" type="button">✕ Clear</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PERSONALISED CONTEXT (both modes) ── -->
+        <div id="row-personalised" style="margin-top:12px">
+          <div class="expander" id="pers-expander">
+            <button class="expander-toggle" onclick="toggleExpander('pers')" type="button">
+              <div class="expander-left">
+                <div class="expander-icon">🧑‍🎓</div>
+                <div class="expander-active-dot"></div>
+                <div>
+                  <div class="expander-title">Add personalised context <span class="opt-badge">Optional</span></div>
+                  <div class="expander-hint" id="pers-hint" id="pers-hint-text">Describe the pupil or group anonymously so the AI can tailor its output</div>
+                </div>
+              </div>
+              <div class="expander-chevron">▸</div>
+            </button>
+            <div class="expander-panel" id="pers-panel">
+              <div class="how-to-box violet" id="pers-howto">
+                <div class="how-to-title">🧑‍🎓 How to use this</div>
+                <ol class="how-to-steps" id="pers-steps">
+                  <li>Describe attainment, attitude to learning, or a specific strength or gap — anonymously</li>
+                  <li>Mention relevant context: "often rushes conclusions", "strong verbal but weaker written", "very engaged but reads below age"</li>
+                  <li>Do <strong>not</strong> use real names — write "this pupil" or describe the group</li>
+                  <li>The AI will weave this into the output without you doing anything else</li>
+                </ol>
+                <div class="how-to-note" id="pers-note">This is for anonymous pedagogical context only — not a pupil record.</div>
+              </div>
+              <div class="gdpr-inline"><span>⚠️</span><span id="pers-gdpr-text"><strong>GDPR:</strong> No real names, no identifiable details, no SEND data, no safeguarding information. Describe anonymously or use "this pupil" / "this group".</span></div>
+              <textarea class="expander-textarea violet-focus" id="pers-paste"
+                placeholder="e.g. This pupil is a strong analytical thinker but struggles to structure extended written answers. They are very engaged in class discussions but often rush their conclusions without fully evaluating evidence. Reading age is approximately on track for Year 12."
+                oninput="onExpanderChange('pers')"></textarea>
+              <div class="expander-status" id="pers-status">
+                <div class="status-dot"></div>
+                <span id="pers-status-text">No personalised context added yet</span>
+                <span class="status-chars" id="pers-chars"></span>
+                <button class="status-clear" id="pers-clear" onclick="clearExpander('pers')" style="display:none" type="button">✕ Clear</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ADMIN-ONLY FIELDS ── -->
+        <div class="admin-only" id="row-admin-fields">
+          <div class="builder-divider"></div>
+          <div class="builder-section-label">Document context</div>
+          <div class="field-row cols-3">
+            <div class="field">
+              <div class="field-head"><div class="field-label">Year Group / Key Stage</div><span class="opt-badge">If relevant</span></div>
+              <div class="field-hint">Leave blank for agendas, policy, whole-school tasks</div>
+              <select id="b-admin-audience" onchange="onFieldChange()">
+                <option value="">Not applicable</option>
+                <option value="KS1 pupils">KS1</option>
+                <option value="KS2 pupils">KS2</option>
+                <option value="KS3 pupils">KS3</option>
+                <option value="GCSE pupils">GCSE</option>
+                <option value="A-Level pupils">A-Level / Sixth Form</option>
+                <option value="whole school">Whole School</option>
+              </select>
+            </div>
+            <div class="field">
+              <div class="field-head"><div class="field-label">Tone</div><span class="req-badge">Required</span></div>
+              <div class="field-hint">Sets the register of the output</div>
+              <select id="b-tone" onchange="onFieldChange()">
+                <option value="formal and professional">Formal &amp; professional</option>
+                <option value="warm and supportive">Warm &amp; supportive</option>
+                <option value="direct and concise">Direct &amp; concise</option>
+                <option value="sensitive and empathetic">Sensitive &amp; empathetic</option>
+                <option value="informative and friendly">Informative &amp; friendly</option>
+              </select>
+            </div>
+            <div class="field">
+              <div class="field-head"><div class="field-label">Length limit</div><span class="opt-badge">Optional</span></div>
+              <div class="field-hint">Precise limits produce precise outputs</div>
+              <div class="length-input-wrap">
+                <input type="number" id="b-length-num" min="1" max="9999" placeholder="e.g. 80" oninput="onFieldChange()" class="length-num-input">
+                <select id="b-length-unit" onchange="onFieldChange()" class="length-unit-select">
+                  <option value="words">words</option>
+                  <option value="characters with spaces">characters with spaces</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Engagement Grades — shown only for report comment tasks -->
+          <div id="row-engagement" style="display:none">
+            <div class="builder-divider" style="margin:14px 0"></div>
+            <div class="builder-section-label">Engagement Grades <span class="opt-badge" style="margin-left:4px">For report comments</span></div>
+            <div class="engagement-explainer">
+              Select the pupil's grade for in-school and out-of-school engagement. The AI will use the school's engagement criteria to shape the language and specific observations in the comment — without referring to grade numbers in the output.
+            </div>
+            <div class="field-row cols-2">
+              <div class="field">
+                <div class="field-head"><div class="field-label">Engagement in school</div><span class="opt-badge">Optional</span></div>
+                <div class="field-hint">Participation, listening, in-class written work, preparation</div>
+                <select id="b-engage-in" onchange="onFieldChange()">
+                  <option value="">Not specified</option>
+                  <option value="1">1 — Outstanding</option>
+                  <option value="2">2 — Good</option>
+                  <option value="3">3 — Requires Improvement</option>
+                  <option value="4">4 — Unsatisfactory</option>
+                </select>
+              </div>
+              <div class="field">
+                <div class="field-head"><div class="field-label">Engagement outside school</div><span class="opt-badge">Optional</span></div>
+                <div class="field-hint">Homework, independent study, use of resources, initiative</div>
+                <select id="b-engage-out" onchange="onFieldChange()">
+                  <option value="">Not specified</option>
+                  <option value="1">1 — Outstanding</option>
+                  <option value="2">2 — Good</option>
+                  <option value="3">3 — Requires Improvement</option>
+                  <option value="4">4 — Unsatisfactory</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="builder-divider"></div>
+
+        <!-- ── T&L: CONSTRAINTS + FORMAT + ADDON ── -->
+        <div class="tl-only">
+          <div class="builder-section-label">Constraints &amp; Output Format</div>
+          <div class="field-row cols-3">
+            <div class="field">
+              <div class="field-head"><div class="field-part part-5">5</div><div class="field-label">Constraints</div></div>
+              <div class="field-hint">Limits on language, reading age, printing</div>
+              <select id="b-tl-constraints" onchange="onFieldChange()">
+                <option value="UK English throughout. UK examples and data sources only (ONS, DfE, NHS, UK organisations). No American English, US companies, or non-UK references.">UK English + UK examples</option>
+                <option value="UK English. No colour printing assumed — all layouts must work in black and white.">UK English + no colour print</option>
+                <option value="UK English. Maximum 2 sides of A4. Accessible font size.">2-page limit</option>
+                <option value="UK English. Suitable for SEN pupils: short sentences, bullet points, clear headings, no complex vocabulary without a glossary.">SEN-accessible</option>
+                <option value="UK English. KS2 reading age. Simple, clear language. Short sentences. No jargon without explanation.">Primary reading level</option>
+              </select>
+            </div>
+            <div class="field">
+              <div class="field-head"><div class="field-part part-6">6</div><div class="field-label">Output Format</div></div>
+              <div class="field-hint">How the result should be structured</div>
+              <select id="b-tl-format" onchange="onFieldChange()">
+                <option value="plain-text">Plain text (copy into Word)</option>
+                <option value="table">Table (copy into Word)</option>
+                <option value="two-col">Two columns: pupil version + answer key</option>
+                <option value="html-quiz">HTML Quiz — downloadable file</option>
+                <option value="html-flash">HTML Flashcard App — downloadable file</option>
+                <option value="html-drag">HTML Drag-and-Drop — downloadable file</option>
+              </select>
+            </div>
+            <div class="field">
+              <div class="field-head"><div class="field-label">Add-on</div><span class="opt-badge">Optional</span></div>
+              <div class="field-hint">Append extra value to the output</div>
+              <select id="b-tl-addon" onchange="onFieldChange()">
+                <option value="">None</option>
+                <option value="At the end, list the 3 most common pupil misconceptions for this topic and a strategy for addressing each.">+ Common misconceptions</option>
+                <option value="Include 3 exam-style questions with mark schemes at the end.">+ Exam questions</option>
+                <option value="Include a glossary of 8 key terms with concise definitions.">+ Key term glossary</option>
+                <option value="Include a 'Real World UK Context' box: a current UK example of this topic.">+ Real-world UK context</option>
+                <option value="Include a differentiation guide: how to adapt for higher and lower ability pupils.">+ Differentiation guide</option>
+                <option value="Include a brief set of discussion questions for a follow-up lesson.">+ Discussion questions</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ADMIN: CONSTRAINTS + FORMAT + ADDON ── -->
+        <div class="admin-only">
+          <div class="builder-section-label">Style &amp; Output Format</div>
+          <div class="field-row cols-3">
+            <div class="field">
+              <div class="field-head"><div class="field-part part-5">5</div><div class="field-label">Language &amp; Style</div></div>
+              <div class="field-hint">Guardrails on register and wording</div>
+              <select id="b-admin-constraints" onchange="onFieldChange()">
+                <option value="UK English throughout. Professional register. No Americanisms, colloquialisms, or jargon. Clear and direct.">UK English — professional</option>
+                <option value="UK English. Avoid deficit language. Frame all observations constructively, focusing on next steps rather than failure.">Avoid deficit language</option>
+                <option value="UK English. Accessible to all parents and guardians regardless of educational background. Avoid educational jargon without explanation.">Accessible to all parents</option>
+                <option value="UK English. Sensitive and empathetic register throughout. Avoid language that could be perceived as judgemental or alarmist.">Sensitive register</option>
+                <option value="UK English. Concise and direct. No padding or repetition. Every sentence must add value.">Concise — no padding</option>
+              </select>
+            </div>
+            <div class="field">
+              <div class="field-head"><div class="field-part part-6">6</div><div class="field-label">Output Format</div></div>
+              <div class="field-hint">How the result should be structured</div>
+              <select id="b-admin-format" onchange="onFieldChange()">
+                <option value="admin-plain">Plain text (copy into Word)</option>
+                <option value="admin-table">Table — one comment per row (for report banks)</option>
+                <option value="admin-letter">Formal letter layout with placeholders</option>
+                <option value="admin-bullets">Bullet point action list</option>
+              </select>
+            </div>
+            <div class="field">
+              <div class="field-head"><div class="field-label">Add-on</div><span class="opt-badge">Optional</span></div>
+              <div class="field-hint">Append extra value to the output</div>
+              <select id="b-admin-addon" onchange="onFieldChange()">
+                <option value="">None</option>
+                <option value="At the end, suggest one specific follow-up action the teacher could take based on the content.">+ Suggested teacher follow-up</option>
+                <option value="For each comment, provide one alternative phrasing so the teacher has options.">+ Alternative phrasing</option>
+                <option value="At the end, flag any content that may benefit from pastoral or SENCO review before sending.">+ Flag for pastoral/SENCO review</option>
+                <option value="Include a brief note on what a positive response or outcome from this communication might look like.">+ Success indicators</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="builder-actions">
+          <button class="btn btn-tl" id="generate-btn" onclick="buildPrompt()">⚙️ Generate Prompt</button>
+          <button class="btn btn-ghost" onclick="copyPrompt()">📋 Copy to Clipboard</button>
+          <button class="btn btn-ghost" onclick="clearBuilder()" style="color:var(--text-dim)">🗑️ Clear</button>
+        </div>
+
+        <!-- OUTPUT -->
+        <div class="output-wrap" id="builder-output">
+          <div class="output-placeholder">Your structured prompt will appear here — choose a mode, fill in the fields, and click Generate.</div>
+        </div>
+
+      </div><!-- /builder-body -->
+    </div><!-- /builder-wrap -->
+  </div><!-- /section 2 -->
+
+  <!-- ══ SECTION 3 — PRO TIPS ══ -->
+  <div class="section animate d3" id="tips">
+    <div class="section-label">Section 3 — Getting Better Results</div>
+    <h2 class="section-title">Prompt <span class="t">Pro Tips</span></h2>
+    <p class="section-desc">Six habits that separate good AI outputs from great ones — regardless of which tool you use.</p>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <span class="tip-icon">🔄</span>
+        <div class="tip-title">Iterate — don't restart</div>
+        <div class="tip-body">Continue the conversation. <code>"Make the starter easier"</code>, <code>"add 3 more questions"</code>, <code>"change the tone"</code>. Each refinement builds without losing context.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">📏</span>
+        <div class="tip-title">Be precise about length</div>
+        <div class="tip-body">Vague prompts produce vague outputs. <code>"Exactly 8 questions"</code>, <code>"no more than 2 sides of A4"</code>, <code>"each comment 50–70 words"</code>.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🎯</span>
+        <div class="tip-title">Paste in spec language</div>
+        <div class="tip-body">Include assessment objective wording directly — or use the Spec panel in the builder. The AI mirrors the exact vocabulary pupils need in exams.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">❌</span>
+        <div class="tip-title">Use "do not" instructions</div>
+        <div class="tip-body"><code>"Do not use American English"</code>, <code>"do not use US companies"</code>, <code>"do not pad with generic openers."</code> Negative constraints are often the most powerful part.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">📋</span>
+        <div class="tip-title">Ask for misconceptions</div>
+        <div class="tip-body">End nearly every resource prompt with: <code>"List the 3 most common pupil misconceptions and how to address each."</code> Huge value at no extra cost.</div>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">✅</span>
+        <div class="tip-title">Always review before use</div>
+        <div class="tip-body">The builder asks the AI to mark uncertain content <code>[CHECK THIS]</code>. AI can be confidently wrong. Read the full output before sharing with pupils or parents.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<footer class="gsal-footer">
+  <div class="gsal-footer-left">
+    <div class="gsal-footer-badge">🏫 AI Toolkit</div>
+    <span class="gsal-footer-text">Staff Digital Literacy Resource · Internal Use Only</span>
+  </div>
+</footer>
+
+<script>
+// ════════════════════════════════════════════
+// MODE
+// ════════════════════════════════════════════
+let currentMode = 'tl';
+
+function setMode(mode) {
+  currentMode = mode;
+  document.body.className = 'mode-' + mode;
+
+  const btnTl    = document.getElementById('btn-tl');
+  const btnAdmin = document.getElementById('btn-admin');
+  const bar      = document.getElementById('builder-bar');
+  const barTitle = document.getElementById('builder-bar-title');
+  const genBtn   = document.getElementById('generate-btn');
+
+  btnTl.className    = 'mode-btn' + (mode==='tl'    ? ' active-tl'  : '');
+  btnAdmin.className = 'mode-btn' + (mode==='admin' ? ' active-adm' : '');
+
+  if (mode === 'tl') {
+    bar.className      = 'builder-bar bar-tl';
+    barTitle.innerHTML = '📚 Teaching &amp; Learning Builder';
+    genBtn.className   = 'btn btn-tl';
+    // Update personalised context wording for T&L
+    updatePersWording('tl');
+  } else {
+    bar.className      = 'builder-bar bar-admin';
+    barTitle.innerHTML = '📋 Professional &amp; Admin Builder';
+    genBtn.className   = 'btn btn-admin';
+    updatePersWording('admin');
+  }
+
+  onFieldChange();
+  clearOutput();
+}
+
+function updatePersWording(mode) {
+  const steps = document.getElementById('pers-steps');
+  const note  = document.getElementById('pers-note');
+  const gdpr  = document.getElementById('pers-gdpr-text');
+  const ta    = document.getElementById('pers-paste');
+  const hint  = document.getElementById('pers-hint');
+
+  if (mode === 'tl') {
+    if(steps) steps.innerHTML = `
+      <li>Describe attainment, attitude, or a specific strength or gap — anonymously</li>
+      <li>Mention relevant context: "often rushes conclusions", "strong verbal but weaker written"</li>
+      <li>Do <strong>not</strong> use real names — write "this pupil" or describe the group</li>
+      <li>The AI will tailor the resource accordingly</li>`;
+    if(note) note.textContent = 'Anonymous pedagogical context only — not a pupil record.';
+    if(gdpr) gdpr.innerHTML = '<strong>GDPR:</strong> No real names, no identifiable details, no SEND data, no safeguarding information.';
+    if(ta)   ta.placeholder = 'e.g. This pupil is a strong analytical thinker but struggles to structure extended written answers. They engage well in discussion but rush conclusions. Reading age approximately on track for Year 12.';
+    if(hint) hint.textContent = 'Describe the pupil or group anonymously so the AI can tailor its output';
+  } else {
+    if(steps) steps.innerHTML = `
+      <li>For report comments: describe performance profile, attitude, and a key development area — no name</li>
+      <li>For parent letters: describe the situation or concern anonymously — "this pupil" not a real name</li>
+      <li>For agendas or policy: describe the context, audience, or relevant background</li>
+      <li>The AI will use this to personalise the document appropriately</li>`;
+    if(note) note.textContent = 'Use this to personalise admin outputs — never as a pupil record or data store.';
+    if(gdpr) gdpr.innerHTML = '<strong>GDPR:</strong> No real names, no identifiable data, no SEND/safeguarding information. Use [Pupil] as placeholder if needed.';
+    if(ta)   ta.placeholder = 'e.g. This pupil performs above expected in written analysis but struggles to manage time in assessments. Attitude to learning is positive and engagement is strong. A development area is moving from description to evaluation.';
+    if(hint) hint.textContent = 'Describe the pupil, situation, or context anonymously to personalise the output';
+  }
+}
+
+// ════════════════════════════════════════════
+// EXPANDERS
+// ════════════════════════════════════════════
+function toggleExpander(key) {
+  const el    = document.getElementById(key + '-expander');
+  const panel = document.getElementById(key + '-panel');
+  const isOpen = el.classList.contains('open-teal') || el.classList.contains('open-violet');
+  const cls   = key === 'spec' ? 'open-teal' : 'open-violet';
+  el.classList.toggle(cls, !isOpen);
+}
+
+function onExpanderChange(key) {
+  const text     = (document.getElementById(key + '-paste').value || '').trim();
+  const status   = document.getElementById(key + '-status');
+  const statusTx = document.getElementById(key + '-status-text');
+  const chars    = document.getElementById(key + '-chars');
+  const clearBtn = document.getElementById(key + '-clear');
+  const expander = document.getElementById(key + '-expander');
+  const hint     = document.getElementById(key + '-hint');
+  const colorKey = key === 'spec' ? 'teal' : 'violet';
+
+  const has = text.length > 0;
+  status.className   = 'expander-status' + (has ? ` active-${colorKey}` : '');
+  expander.classList.toggle(`has-content-${colorKey}`, has);
+  clearBtn.style.display = has ? 'inline-block' : 'none';
+  status.querySelector('.status-dot').style.background = has
+    ? (colorKey === 'teal' ? 'var(--teal)' : 'var(--violet)') : '';
+
+  if (!has) {
+    statusTx.textContent = key === 'spec' ? 'No spec content added yet' : 'No personalised context added yet';
+    chars.textContent = '';
+    if (hint) hint.textContent = key === 'spec'
+      ? 'Open your spec PDF → find your topic section → copy and paste it here'
+      : (currentMode === 'tl' ? 'Describe the pupil or group anonymously so the AI can tailor its output' : 'Describe the pupil, situation, or context anonymously to personalise the output');
+  } else {
+    statusTx.textContent = key === 'spec'
+      ? '✓ Spec content ready — the AI will extract what\'s relevant'
+      : '✓ Personalised context added — will shape the output';
+    chars.textContent = `${text.length.toLocaleString()} chars`;
+    if (hint) hint.textContent = `✓ ${text.length.toLocaleString()} characters added`;
+  }
+}
+
+function clearExpander(key) {
+  document.getElementById(key + '-paste').value = '';
+  onExpanderChange(key);
+}
+
+// ════════════════════════════════════════════
+// FIELD CHANGE / DOTS
+// ════════════════════════════════════════════
+function onFieldChange() {
+  const isTl = currentMode === 'tl';
+
+  const vals = {
+    1: document.getElementById('b-role').value,
+    2: isTl ? document.getElementById('b-tl-audience').value : 'present',
+    3: isTl ? (document.getElementById('b-objective').value || 'present') : 'present',
+    4: isTl ? (document.getElementById('b-tl-task').value + document.getElementById('b-topic').value)
+            : (document.getElementById('b-admin-task').value),
+    5: isTl ? document.getElementById('b-tl-constraints').value : document.getElementById('b-admin-constraints').value,
+    6: isTl ? document.getElementById('b-tl-format').value    : document.getElementById('b-admin-format').value,
+  };
+
+  let filled = 0;
+  for (const [part, val] of Object.entries(vals)) {
+    const has = val && val.trim() !== '';
+    const dot = document.querySelector(`.dot[data-part="${part}"]`);
+    if (dot) dot.classList.toggle('filled', has);
+    if (has) filled++;
+  }
+
+  const label = document.getElementById('dot-label');
+  const total = 6;
+  if (filled === 0) label.textContent = 'Fill in the fields to build your prompt';
+  else if (filled < 4) label.textContent = `${filled} of ${total} parts set — keep going`;
+  else if (filled < total) label.textContent = `${filled} of ${total} parts set — nearly there`;
+  else label.textContent = `All ${total} parts set — ready to generate!`;
+}
+
+// ════════════════════════════════════════════
+// BUILD PROMPT
+// ════════════════════════════════════════════
+// ════════════════════════════════════════════
+// ENGAGEMENT GRADE SUMMARIES (condensed from school criteria)
+// ════════════════════════════════════════════
+const ENGAGE_IN = {
+  '1': `In-class engagement is outstanding. Actively participates in discussions and written work, demonstrating deep interest and thoughtful listening. Arrives exceptionally well-prepared, often bringing additional research or insightful questions. Written work shows solid theoretical understanding with precise, well-selected knowledge, well-developed analysis applied effectively to context, and balanced, focused judgements built on that analysis.`,
+  '2': `In-class engagement is consistently good. Contributes thoughtfully to discussions verbally and in writing, listens attentively, and arrives ready to engage fully with the lesson. Supports a positive learning environment. Written work demonstrates good knowledge and understanding, well-developed analysis applied to context, and judgements built on analysis.`,
+  '3': `In-class engagement requires improvement. Participation is variable — not consistently engaged through listening or written work. Preparation for lessons is sometimes insufficient, affecting ability to contribute fully. Written work shows limited knowledge, often descriptive rather than analytical, with judgements that lack clear links to analysis or focus on the task.`,
+  '4': `In-class engagement is unsatisfactory. There is frequent lack of participation in tasks, discussions, and written work. Insufficient preparation significantly impedes engagement with lesson content. Behaviour may impede their own learning and that of others. Written work is mostly descriptive, often unfocused, and judgements are based on assertion rather than analysis.`,
+};
+
+const ENGAGE_OUT = {
+  '1': `Engagement outside school is outstanding. Shows remarkable initiative in independent learning, seeking additional resources and extending engagement beyond the curriculum. Homework and independent study are characterised by thorough exploration, critical thinking, and often go above set requirements. Engages with all additional resources provided.`,
+  '2': `Engagement outside school is good. Homework and independent study are completed on time and to a commendable standard, reflecting a solid grasp of the material. Manages time effectively, uses available resources wisely, and occasionally seeks additional information to deepen understanding.`,
+  '3': `Engagement outside school requires improvement. Consistency and depth of effort in homework and independent study are variable — some tasks completed adequately while others lack thorough engagement. More effective study habits and active use of feedback would significantly support progress.`,
+  '4': `Engagement outside school is unsatisfactory. Effort in homework and independent study is markedly insufficient, with tasks often incomplete or done to the bare minimum. This reflects significant disengagement from learning responsibilities and a lack of initiative in pursuing academic improvement.`,
+};
+
+// ════════════════════════════════════════════
+// FORMAT LABELS — mode-specific
+// ════════════════════════════════════════════
+const FORMAT_LABELS_TL = {
+  'plain-text': 'Output as plain text formatted for easy copy-paste into Microsoft Word. Use clear headings and line breaks.',
+  'table':      'Output as a structured table with clear column headers, formatted for copy-paste into Microsoft Word.',
+  'two-col':    'Output as a two-column table: pupil-facing version on the left, teacher answer key on the right. Formatted for Word.',
+  'html-quiz':  'Build a single self-contained HTML file. 10 questions, immediate per-answer feedback, running score, results screen with revision tip. No external libraries. Teacher notes as an HTML comment at the top.',
+  'html-flash': 'Build a single self-contained HTML flashcard app. Card flip animation, self-rating (Got it / Unsure / Revise again), session progress counter. No external libraries. Teacher notes as an HTML comment.',
+  'html-drag':  'Build a single self-contained HTML drag-and-drop sorting or categorisation activity. Reset button, check-answers with visual feedback, score. No external libraries. Teacher notes as an HTML comment.',
+};
+
+const FORMAT_LABELS_ADMIN = {
+  'admin-plain':   'Output as plain text formatted for easy copy-paste into Microsoft Word. Use clear headings and spacing.',
+  'admin-table':   'Output as a table with one row per comment or item. Include a clear header row. Formatted for copy-paste into Microsoft Word or Excel.',
+  'admin-letter':  'Output as a formal letter layout. Include: [Date], [Recipient], greeting, body paragraphs, and sign-off with [Name/Title] placeholder. Formatted for copy-paste into Word.',
+  'admin-bullets': 'Output as a structured bullet point list. Use clear headings to group related actions or points. Formatted for copy-paste into Word.',
+};
+
+// ════════════════════════════════════════════
+// SHOW/HIDE ENGAGEMENT on task change
+// ════════════════════════════════════════════
+function onAdminTaskChange() {
+  const task = document.getElementById('b-admin-task').value;
+  const isReport = task.toLowerCase().includes('report comment') || task.toLowerCase().includes('predicted grade');
+  document.getElementById('row-engagement').style.display = isReport ? 'block' : 'none';
+  onFieldChange();
+}
+
+const TL_TASK_MAP = {
+  'Create a differentiated worksheet with starter, main task, and extension':
+    t=>`Design a fully differentiated worksheet on "${t}":\n• Retrieval starter (5 questions activating prior knowledge)\n• Main task at expected level with clear success criteria\n• Extension pushing higher-order thinking and evaluation\n• Self-assessment prompt so pupils can reflect on their progress`,
+  'Create a 10-question retrieval practice quiz with answers':
+    t=>`Build a 10-question retrieval quiz on "${t}". Vary question types (multiple choice, short answer, fill-in-the-blank). Sequence from recall to applied understanding. Full answer key — for each answer, one sentence explaining WHY it is correct.`,
+  'Create a knowledge organiser — one side of A4':
+    t=>`Create a knowledge organiser for "${t}" fitting one side of A4: definition/overview (3–5 sentences); 8–12 key terms with concise definitions; 2–3 visual prompts described in text; timeline or process if appropriate; 3–5 key facts to memorise.`,
+  'Create a complete 60-minute lesson plan':
+    t=>`Write a complete 60-minute lesson plan for "${t}": learning objectives (know/understand/apply); starter activity; teacher input and modelling; active pupil task; plenary or exit ticket; differentiation notes; resource requirements.`,
+  'Create a cover lesson that a non-specialist can deliver independently':
+    t=>`Create a fully self-contained cover lesson on "${t}" that a non-specialist cover supervisor can deliver without subject knowledge. Include: clear pupil instructions; all materials needed; a structured task with obvious success criteria; extension work; and a simple plenary. No specialist knowledge required to run it.`,
+  'Create a structured essay scaffold / writing frame':
+    t=>`Build an essay scaffold for "${t}": model thesis/introduction frame; 3–4 body paragraph frames with sentence starters, evidence prompts, and connectives; conclusion frame; annotated model paragraph (strong vs weak); self-editing checklist.`,
+  'Create a reading comprehension passage with questions and answers':
+    t=>`Write an age-appropriate reading comprehension passage on "${t}" (approx. 400–500 words), followed by: 5 retrieval questions; 3 inference questions; 2 evaluation/analysis questions. Full answer key with mark allocation.`,
+  'Create pupil-facing task instructions for an independent project':
+    t=>`Write clear, engaging pupil-facing instructions for an independent study task on "${t}". Include: the task brief; success criteria; suggested steps or structure; time guidance; and what the final product should look like. Written directly to the pupil.`,
+  'Create exam-style questions with mark schemes':
+    t=>`Generate 5 exam-style questions on "${t}" scaling in demand (2, 4, 6, 8, and 12 marks). For each: full mark scheme aligned to assessment objectives; indicative content; level descriptors where appropriate; notes on the most common pupil errors at each mark band.`,
+  'Create a model answer at the top mark band with annotations':
+    t=>`Write a top mark band model answer for a challenging question on "${t}". Annotate in-line to show: where marks are earned; which assessment objectives are addressed; exemplary techniques; 2–3 stylistic choices that distinguish a top-band response.`,
+  'Create a self-assessment checklist using \'I can…\' statements':
+    t=>`Build a pupil self-assessment checklist for "${t}" with 10–12 "I can…" statements from foundational to advanced. For each: confidence column (Not yet / Getting there / Confident); "What to do next" suggestion linked to the gap.`,
+  'Create a DIRT / purple pen task for pupils to act on feedback':
+    t=>`Design a structured DIRT (Dedicated Improvement and Reflection Time) task for "${t}". Include: 3–4 targeted improvement tasks pupils can complete based on common feedback; sentence starters to help them respond; a self-evaluation prompt at the end.`,
+  'Create a pre-exam revision checklist covering all key topics':
+    t=>`Create a comprehensive pre-exam revision checklist for "${t}". List all key topics, subtopics, and skills pupils need to have covered. For each, a confidence self-rating column. Group by theme or unit. Include a "my priority areas" section at the end.`,
+  'Create discussion or Socratic questioning prompts for classroom debate':
+    t=>`Generate 12 discussion and Socratic questioning prompts for "${t}". Include: 4 opening questions to establish prior knowledge; 4 probing questions that challenge assumptions; 4 higher-order evaluation questions. Note the intended thinking level for each.`,
+  'Generate feedback comments for a class set of responses':
+    t=>`Generate 15 targeted feedback comments for work on "${t}": 5 below-expected (constructive, growth-focused); 5 at-expected (one strength, one next step); 5 high attainment (push thinking further). Use [Pupil] as placeholder. No generic praise.`,
+};
+
+const ADMIN_TASK_MAP = {
+  'Generate a bank of GDPR-safe academic report comments using [Pupil] as placeholder. Range of performance profiles.':
+    ()=>`Generate 15 academic report comments using [Pupil] as placeholder. Include: 5 for pupils performing above expected (specific strengths, next challenge); 5 for pupils at expected (one strength, one development area, one action); 5 for pupils below expected (constructive, growth-focused, specific next step). Each 50–70 words. UK English. No generic openers.`,
+  'Generate a bank of GDPR-safe pastoral / form tutor report comments using [Pupil] as placeholder.':
+    ()=>`Generate 12 pastoral / form tutor report comments using [Pupil] as placeholder. Range of profiles including: engaged and positive; socially confident but academically inconsistent; quieter but diligent; some attendance or attitude concerns (handled sensitively). Each 40–60 words. Warm but professional register. UK English.`,
+  'Generate a bank of GDPR-safe predicted grade / effort grade comments using [Pupil] as placeholder.':
+    ()=>`Generate 10 brief predicted grade and effort comments using [Pupil] as placeholder. Range of performance profiles. Each comment: 25–40 words; acknowledge current trajectory; note what is needed to reach or exceed the predicted grade. Professional, honest, and encouraging.`,
+  'Draft a formal behaviour letter home to parents regarding a pupil concern, using [Pupil] as placeholder. Professional, factual, and non-inflammatory.':
+    ()=>`Draft a formal letter to parents regarding a behaviour concern about [Pupil]. Use [Pupil] as placeholder throughout. Include: a clear, factual account of the concern (no inflammatory language); the school's response and next steps; what is expected of the pupil going forward; an invitation for parents to make contact. Professional, direct, and non-judgemental in register. UK English.`,
+  'Draft a letter home to parents regarding a pastoral concern — attendance, welfare, or wellbeing — using [Pupil] as placeholder. Sensitive and supportive in tone.':
+    ()=>`Draft a sensitive pastoral letter to parents about a concern regarding [Pupil]. Use [Pupil] as placeholder. Include: a caring opening that frames the school's concern positively; a clear but sensitive description of the issue; the support the school is offering; what would help from parents; and an invitation to discuss further. Empathetic and supportive register. UK English.`,
+  'Draft a positive recognition letter home to parents celebrating a pupil\'s achievement or attitude, using [Pupil] as placeholder. Warm and specific.':
+    ()=>`Draft a warm, specific recognition letter to parents celebrating [Pupil]'s achievement or attitude. Use [Pupil] as placeholder. Include: a genuine, specific opening about what has impressed; what this demonstrates about the pupil's character or effort; encouragement to keep it up. Warm and personal — not generic. UK English.`,
+  'Draft a letter inviting parents to a meeting to discuss their child\'s progress or a concern, using [Pupil] as placeholder. Professional and clear about the purpose.':
+    ()=>`Draft a professional letter inviting parents of [Pupil] to a meeting. Use [Pupil] as placeholder. Include: clear statement of why the meeting is being requested (progress review or specific concern); proposed date/time placeholder; location or format (in person / online); who will be present (placeholders); what parents might wish to prepare or bring. Professional and reassuring — not alarming. UK English.`,
+  'Draft an initial trip information letter to parents: trip name, destination, educational purpose, dates, costs, kit list placeholders, and permission slip reminder. Informative and engaging.':
+    ()=>`Draft an initial educational trip information letter to parents. Include: trip name and destination [DESTINATION]; educational purpose and curriculum links; dates and departure/return times [DATES/TIMES]; total cost and payment deadline [COST/DEADLINE]; key kit list items (placeholders appropriate for the trip type); permission slip and medical form reminder; staff contact name placeholder; any important safety or behaviour expectations. Informative, engaging, and reassuring. UK English.`,
+  'Draft a pre-departure update to parents with final logistics, departure time, return time, emergency contact number placeholder, and what pupils should bring.':
+    ()=>`Draft a final pre-departure communication to parents ahead of the trip. Include: confirmed departure time and meeting point; confirmed return time and collection arrangements; emergency contact number for the trip [EMERGENCY NUMBER]; final kit list reminder; any last-minute important information. Clear, concise, and reassuring. UK English.`,
+  'Draft a brief trip update communication to parents during or immediately after the trip — what the group has been doing, highlights, and return details.':
+    ()=>`Draft a brief, warm trip update to parents. Include: a highlight or two from what the group has been doing; positive observations about pupils' engagement and experience; confirmed return time and collection arrangements. Engaging and enthusiastic — helps parents feel connected to the experience. UK English.`,
+  'Draft a warm, informative letter home to parents about a school event or update':
+    ()=>`Draft a warm, informative letter to parents about a school event or update. Include: engaging opening; key information clearly presented; any actions required by parents; contact details placeholder. Friendly, professional, and concise. UK English.`,
+  'Draft a sensitive letter home to parents regarding a pupil concern, using [Pupil] as placeholder':
+    ()=>`Draft a sensitive, professional letter to parents regarding a concern about [Pupil]. Use [Pupil] as placeholder. Include: careful, non-alarmist opening; clear explanation of the concern; steps the school is taking; invitation for dialogue; warm and supportive close. UK English. Empathetic but professional register.`,
+  'Draft a school newsletter contribution or section':
+    ()=>`Draft a school newsletter contribution. Engaging, warm, and informative. Clear structure with a headline, brief intro, key content, and a call to action where appropriate. 150–250 words. Accessible to all parents/guardians regardless of background. UK English.`,
+  'Create a 50-minute CPD session plan':
+    ()=>`Design a 50-minute CPD session. Include: clear session objectives; timings for each activity; facilitation notes; a hands-on practical element; a resource participants leave with; a reflection prompt. Every activity must be directly applicable to classroom practice.`,
+  'Create a scheme of work overview as a planning grid':
+    ()=>`Create a scheme of work: unit rationale; overall learning goals; 8–10 lessons with one-line descriptions; key assessments with purpose; cross-curricular links; recommended resources. Format as a planning grid.`,
+  'Draft a professional policy document':
+    ()=>`Draft a professional school policy document. Include: purpose and scope; key principles; responsibilities (staff, leadership, pupils where relevant); procedures; and a review date placeholder. UK English. Formal but accessible register.`,
+  'Create a structured meeting agenda':
+    ()=>`Create a structured meeting agenda. Include: meeting title, date/time/location placeholders; list of attendees placeholder; agenda items with allocated time; any pre-reading or preparation required; AOB; and next meeting placeholder. Professional, clear, and practical.`,
+  'Draft a structured set of interview questions for a teaching post (with notes on what strong answers look like)':
+    ()=>`Draft 8 structured interview questions for a teaching post. For each question: the question itself; the intended focus (e.g. safeguarding awareness, behaviour management, subject knowledge); bullet points noting what a strong answer would include. Include at least one safeguarding-related question.`,
+  'Summarise meeting notes into a clear set of agreed actions and next steps':
+    ()=>`Summarise meeting notes into a clear action log. For each agreed action: the action itself; who is responsible (use [Name] as placeholder); deadline or timeframe; any dependencies or notes. Followed by a brief summary of key decisions made. Professional and concise.`,
+};
+
+function buildPrompt() {
+  const isTl   = currentMode === 'tl';
+  const role   = document.getElementById('b-role').value;
+
+  if (!role) { showError('Please select a Subject / Role.'); return; }
+
+  if (isTl) {
+    const task        = document.getElementById('b-tl-task').value;
+    const year        = document.getElementById('b-tl-audience').value;
+    const topic       = document.getElementById('b-topic').value.trim();
+    const format      = document.getElementById('b-tl-format').value;
+    const constraints = document.getElementById('b-tl-constraints').value;
+    const addon       = document.getElementById('b-tl-addon').value;
+    const specTx      = (document.getElementById('spec-paste').value || '').trim();
+    const persTx      = (document.getElementById('pers-paste').value || '').trim();
+    if (!task || !year || !topic) { showError('Please complete: Task Type, Year Group, and Topic.'); return; }
+    buildTLPrompt(role, year, task, topic, format, constraints, addon, specTx, persTx);
+  } else {
+    const task        = document.getElementById('b-admin-task').value;
+    const tone        = document.getElementById('b-tone').value;
+    const format      = document.getElementById('b-admin-format').value;
+    const constraints = document.getElementById('b-admin-constraints').value;
+    const addon       = document.getElementById('b-admin-addon').value;
+    const persTx      = (document.getElementById('pers-paste').value || '').trim();
+    const lenNum      = document.getElementById('b-length-num').value.trim();
+    const lenUnit     = document.getElementById('b-length-unit').value;
+    const engIn       = document.getElementById('b-engage-in').value;
+    const engOut      = document.getElementById('b-engage-out').value;
+    if (!task) { showError('Please select a Task Type.'); return; }
+    buildAdminPrompt(role, task, tone, format, constraints, addon, persTx, lenNum, lenUnit, engIn, engOut);
+  }
+}
+
+function buildTLPrompt(role, year, task, topic, format, constraints, addon, specTx, persTx) {
+  const ability = document.getElementById('b-ability').value;
+  const board   = document.getElementById('b-board').value;
+  const obj     = document.getElementById('b-objective').value.trim();
+
+  const boardNote   = board ? ` You are familiar with the ${board} specification and assessment objectives.` : '';
+  const roleBlock   = `You are an ${role}, with deep expertise in curriculum design, formative assessment, and age-appropriate pedagogy for UK schools.${boardNote} You produce resources that are accurate, classroom-ready, and immediately usable.`;
+
+  const abilityNote  = ability ? ` The class is a ${ability}.` : '';
+  const boardCtx     = board  ? ` This is for the ${board} specification.` : '';
+  const contextBlock = `My pupils are ${year}.${abilityNote}${boardCtx} This resource is for the topic: "${topic}".`;
+
+  const objectiveBlock = obj
+    ? obj
+    : `Before designing the resource, consider: what prior knowledge can you reasonably assume for ${year} on "${topic}"? What are the most common misconceptions? Use these to shape difficulty, scaffolding, and worked examples.`;
+
+  const taskFn    = TL_TASK_MAP[task];
+  const taskBlock = taskFn ? taskFn(topic) : `${task} on the topic "${topic}".`;
+
+  const constraintsBlock = constraints + '\nFlag any content you are uncertain about with [CHECK THIS] so the teacher can verify before use.';
+  const qualityBlock     = `All content must be:\n• Factually accurate and verifiable\n• Aligned to the stated year group, key stage, or exam board\n• Using terminology pupils will encounter in assessments\n• Written in UK English throughout`;
+  const gdprBlock        = `Use [Pupil] as a placeholder wherever a pupil name would appear. Do not reference, invent, or imply any real individual.`;
+
+  const sections = [
+    { sec:'Role',        text: roleBlock },
+    { sec:'Context',     text: contextBlock },
+    { sec:'Objective',   text: objectiveBlock },
+  ];
+  if (specTx) sections.push({ sec:'Spec', text:`The following is specification content for this subject and topic. Read it carefully, extract the assessment objectives, command words, and content statements relevant to "${topic}", and use only those to shape the resource. Do not reproduce the spec wholesale — use it to calibrate language, depth, and assessment alignment.\n\n${specTx}` });
+  sections.push({ sec:'Task', text: taskBlock });
+  if (persTx) sections.push({ sec:'Personalised', text:`The following is anonymous context about the pupil or group this resource is for. Use it to personalise difficulty, examples, scaffolding, or tone:\n\n${persTx}` });
+  sections.push({ sec:'Constraints',  text: constraintsBlock });
+  sections.push({ sec:'Format',       text: FORMAT_LABELS_TL[format] + '\n\n' + qualityBlock });
+  if (addon) sections.push({ sec:'Add-on', text: addon });
+  sections.push({ sec:'GDPR', text: gdprBlock });
+
+  renderOutput(sections, format);
+}
+
+function buildAdminPrompt(role, task, tone, format, constraints, addon, persTx, lenNum, lenUnit, engIn, engOut) {
+  const adminAud = document.getElementById('b-admin-audience').value;
+  const audNote  = adminAud ? ` The document relates to ${adminAud}.` : '';
+
+  const roleBlock = `You are an ${role}, experienced in professional school communications, documentation, and administration in UK secondary schools. You produce clear, accurate, professional documents that are ready to use with minimal editing.`;
+
+  const contextBlock = `This is a professional/admin task.${audNote} Tone required: ${tone}. UK English throughout.`;
+
+  const taskFn    = ADMIN_TASK_MAP[task];
+  let   taskBlock = taskFn ? taskFn() : task;
+
+  // Inject engagement grade summaries if selected
+  if (engIn || engOut) {
+    taskBlock += '\n\n--- ENGAGEMENT CONTEXT ---\n';
+    taskBlock += 'Use the following engagement descriptions to shape the language and specific observations in the comment. Do NOT mention grade numbers, grade labels, or this grading system explicitly in the output — reflect the characteristics naturally in your writing.\n\n';
+    if (engIn)  taskBlock += `IN-SCHOOL ENGAGEMENT:\n${ENGAGE_IN[engIn]}\n\n`;
+    if (engOut) taskBlock += `OUT-OF-SCHOOL ENGAGEMENT:\n${ENGAGE_OUT[engOut]}`;
+  }
+
+  // Length constraint
+  let lengthLine = '';
+  if (lenNum && lenNum > 0) {
+    const isReport = task.toLowerCase().includes('report comment') || task.toLowerCase().includes('predicted grade');
+    lengthLine = isReport
+      ? `Each comment must be exactly ${lenNum} ${lenUnit}.`
+      : `The total output must not exceed ${lenNum} ${lenUnit}.`;
+  }
+
+  const constraintsBlock = constraints
+    + (lengthLine ? '\n' + lengthLine : '')
+    + '\nFlag any content you are uncertain about with [CHECK THIS].';
+
+  const qualityBlock = `All content must be:\n• Professional and appropriate for a UK school context\n• UK English throughout — no Americanisms\n• Ready to use with minimal editing\n• Sensitive and appropriate in register`;
+
+  const gdprBlock = `Use [Pupil] as a placeholder for any pupil name. Use [Name] for any other individual. Do not invent, imply, or reference any real person.`;
+
+  const sections = [
+    { sec:'Role',    text: roleBlock },
+    { sec:'Context', text: contextBlock },
+    { sec:'Task',    text: taskBlock },
+  ];
+  if (persTx) sections.push({ sec:'Personalised', text:`The following is anonymous context about the pupil, situation, or document purpose. Use it to personalise the output appropriately:\n\n${persTx}` });
+  sections.push({ sec:'Constraints', text: constraintsBlock });
+  sections.push({ sec:'Format',      text: FORMAT_LABELS_ADMIN[format] + '\n\n' + qualityBlock });
+  if (addon) sections.push({ sec:'Add-on', text: addon });
+  sections.push({ sec:'GDPR', text: gdprBlock });
+
+  renderOutput(sections, format);
+}
+
+function renderOutput(sections, format) {
+  const isHtml    = format.startsWith('html');
+  const totalChars = sections.reduce((n,s)=>n+s.text.length, 0);
+  const plain      = sections.map(s=>`[${s.sec.toUpperCase()}]\n${s.text}`).join('\n\n');
+
+  const sectionsHtml = sections.map(s=>`
+    <div class="output-section" data-sec="${s.sec}">
+      <div class="output-label">${s.sec}</div>
+      <div class="output-body">${escHtml(s.text)}</div>
+    </div>`).join('');
+
+  const downloadBtnHtml = isHtml
+    ? `<button class="download-btn" onclick="showHtmlInstructions()">📥 How to get your file</button>`
+    : '';
+
+  document.getElementById('builder-output').innerHTML =
+    sectionsHtml +
+    `<div class="output-copy-bar">
+       <span>✓ Prompt ready — ${sections.length} sections</span>
+       <span style="display:flex;align-items:center;gap:10px">
+         ${downloadBtnHtml}
+         <span class="output-char">~${totalChars.toLocaleString()} chars</span>
+       </span>
+     </div>`;
+
+  document.getElementById('builder-output').dataset.plain  = plain;
+  document.getElementById('builder-output').dataset.format = format;
+
+  document.getElementById('builder-output').scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+function showHtmlInstructions() {
+  alert(
+    'How to get your HTML file:\n\n' +
+    '1. Click "Copy to Clipboard" above\n' +
+    '2. Paste the prompt into Claude, ChatGPT, or Copilot\n' +
+    '3. The AI will generate the complete HTML code\n' +
+    '4. Copy all the code the AI produces\n' +
+    '5. Open Notepad (Windows) or TextEdit (Mac)\n' +
+    '6. Paste the code and save the file with a .html extension\n' +
+    '7. Open that file in any web browser — it works offline\n\n' +
+    'Tip: You can share the .html file with pupils by email or via your school VLE.'
+  );
+}
+
+function showError(msg) {
+  document.getElementById('builder-output').innerHTML =
+    `<div class="output-placeholder" style="color:var(--coral)">⚠️ ${msg}</div>`;
+}
+
+function clearOutput() {
+  const out = document.getElementById('builder-output');
+  out.innerHTML = '<div class="output-placeholder">Your structured prompt will appear here — choose a mode, fill in the fields, and click Generate.</div>';
+  delete out.dataset.plain;
+  delete out.dataset.format;
+}
+
+// ════════════════════════════════════════════
+// COPY + CLEAR
+// ════════════════════════════════════════════
+function copyPrompt() {
+  const plain = document.getElementById('builder-output').dataset.plain || '';
+  if (!plain) { alert('Generate a prompt first.'); return; }
+  navigator.clipboard.writeText(plain).then(() => {
+    const btn = document.querySelectorAll('.builder-actions .btn-ghost')[0];
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    btn.style.color = 'var(--lime)';
+    btn.style.borderColor = 'var(--lime)';
+    setTimeout(()=>{ btn.textContent=orig; btn.style.color=''; btn.style.borderColor=''; }, 2500);
+  });
+}
+
+function clearBuilder() {
+  ['b-role','b-tl-task','b-admin-task','b-tl-audience','b-admin-audience',
+   'b-ability','b-board','b-tone','b-tl-constraints','b-admin-constraints',
+   'b-tl-format','b-admin-format','b-tl-addon','b-admin-addon',
+   'b-length-unit','b-engage-in','b-engage-out']
+    .forEach(id=>{ const el=document.getElementById(id); if(el) el.selectedIndex=0; });
+  ['b-topic','b-objective','b-length-num']
+    .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('row-engagement').style.display = 'none';
+  clearExpander('spec');
+  clearExpander('pers');
+  clearOutput();
+  onFieldChange();
+}
+
+// ════════════════════════════════════════════
+// UTILITY
+// ════════════════════════════════════════════
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\n/g,'<br>');
+}
+
+// Init
+onFieldChange();
+</script>
+</body>
+</html>
